@@ -1,4 +1,6 @@
-#!/bin/zsh
+#!/bin/bash
+
+# Upload project to pypi
 
 rm -rf ./build
 rm -rf ./dist

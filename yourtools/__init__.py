@@ -13,4 +13,4 @@
 """
 
 from .db import *
-from .msg import *
+import wechat

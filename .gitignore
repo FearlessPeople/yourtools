@@ -3,4 +3,5 @@
 /venv
 /build
 /dist
+/test
 /yourtools.egg-info
