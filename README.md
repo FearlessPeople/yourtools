@@ -1,8 +1,9 @@
 # Python常用工具类
 
 ## 安装
-```python
+```shell
 pip3 uninstall yourtools
+pip3 install yourtools
 ```
 
 ## 包清单
