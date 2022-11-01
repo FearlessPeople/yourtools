@@ -13,4 +13,6 @@
 """
 
 from .db import *
-import wechat
+from .db.mysql import MySQL
+from .db.hive import Hive
+from WeChat import WeChat
