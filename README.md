@@ -1,18 +1,23 @@
-# Python常用工具类
+# Python tools
 
-## 安装
+## Installation
 ```shell
 pip3 uninstall yourtools
 pip3 install yourtools
 ```
 
-## 包清单
+## Table of Contents
 
 - WeChat
+  - send_msg
 - MySQL
+  - query
+  - execute
 - Hive
+  - query
+  - exec_ddl_sql
 
-## 使用
+## Example
 
 ### 1、MySQL
 
@@ -29,10 +34,10 @@ def test_mysql():
         'charset': 'utf8'
     }
     mysql = MySQL(dbconfg)
-    # 查询数据
+    # query data
     result = mysql.query("select * from users")
     print(result)
-    # 执行DML
+    # dml sql 
     result = mysql.execute("insert into users(name,birthday,ts) values('灭霸2','2022-11-01 16:00:00','2022-11-01 16:00:00') ")
 ```
 
@@ -60,7 +65,7 @@ print(rows)
 ```python
 from yourtools import WeChat
 
-# WeChat(企业ID，Secret，AgentId)
+# WeChat(corpid，Secret，AgentId)
 qw = WeChat("asdg234234", "OINFSokasdIOKflsafdaOOKFD", 1000000)
 data = {
     "touser": "198297694527839423",

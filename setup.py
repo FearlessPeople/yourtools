@@ -2,10 +2,12 @@ import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
 
 setuptools.setup(
     name="yourtools",
-    version="0.0.2",
+    version="0.0.6",
     author="zfang",
     author_email="founder517518@163.com",
     description="Python helper tools",
@@ -18,5 +20,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.8',
+    install_requires=required,
 )
