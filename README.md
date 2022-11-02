@@ -15,8 +15,8 @@ pip3 install yourtools
   - query 执行普通查询SQL
   - execute 执行DML SQL
 - Hive
-  - query
-  - exec_ddl_sql
+  - query 执行普通查询SQL
+  - exec_ddl_sql 执行DML SQL
 
 ## Example
 

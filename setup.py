@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name="yourtools",
-    version="0.2.1",
+    version="0.2.2",
     author="zfang",
     author_email="founder517518@163.com",
     description="Python helper tools",
