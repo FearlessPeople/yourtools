@@ -9,10 +9,11 @@ pip3 install yourtools
 ## Table of Contents
 
 - WeChat
-  - send_msg
+  - send_msg 发送应用消息
+  - upload_media 上传临时素材文件到企微，并返回media_id
 - MySQL
-  - query
-  - execute
+  - query 执行普通查询SQL
+  - execute 执行DML SQL
 - Hive
   - query
   - exec_ddl_sql
@@ -81,6 +82,6 @@ data = {
     "enable_duplicate_check": 0,
     "duplicate_check_interval": 1800
 }
-send_statu = qw.send_text(data)
+send_statu = qw.send_msg(data)
 print(send_statu)
 ```

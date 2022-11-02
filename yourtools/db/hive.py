@@ -48,11 +48,8 @@ class Hive:
             if result is None:
                 return True
         except Exception as e:
-            e_msg = """ Execute Hive SQL Error: 
-    --------------------------Hive SQL Start-------------------------
-     \n{sql}\n
-    ---------------------------Hive SQL End——------------------------
-    \n{e}\n """.format(sql=sql, e=e.args[0].status.errorMessage)
+            print(sql)
+            raise Exception("Execute Hive SQL Error:", e)
             return False
         finally:
             if cursor:
@@ -65,20 +62,18 @@ class Hive:
         :param sql: Hive SQL
         :return: Query Result
         """
+        query_rows = None
         try:
             cursor = self.connect.cursor()
             cursor.execute(sql)
-            rows = cursor.fetchall()
+            query_rows = cursor.fetchall()
         except Exception as e:
-            e_msg = """ Execute Hive SQL Error: 
-    --------------------------Hive SQL Start-------------------------
-     \n{sql}\n
-    ---------------------------Hive SQL End——------------------------
-    \n{e}\n """.format(sql=sql, e=e.args[0].status.errorMessage)
+            print(sql)
+            raise Exception("Execute Hive SQL Error:", e)
         finally:
             if cursor:
                 cursor.close()
-        return rows
+        return query_rows
 
     def close_conn(self):
         if self.connect:

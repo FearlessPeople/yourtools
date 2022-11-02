@@ -54,7 +54,7 @@ class WeChat:
     def send_msg(self, data):
         return self._send_msg(data)
 
-    def upload_media_get_media_id(self, filetype, filepath, filename):
+    def upload_media(self, filetype, filepath, filename):
         """
         上传临时素材到企微并获取media_id
         :param filetype: 图片（image）、语音（voice）、视频（video），普通文件（file）
@@ -68,7 +68,7 @@ class WeChat:
                 access_token=self.access_token)
 
             m = MultipartEncoder(
-                fields={filename: ('file', open(filepath + filename, 'rb'), 'text/plain')},
+                fields={filename: (filename, open(filepath + filename, 'rb'), 'text/plain')},
             )
             response = requests.post(url=post_file_url, data=m, headers={'Content-Type': m.content_type})
             if response.status_code == 200:
