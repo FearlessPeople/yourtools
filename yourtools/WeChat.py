@@ -13,6 +13,7 @@
 """
 import json
 import requests
+from requests_toolbelt import MultipartEncoder
 
 
 class WeChat:
@@ -53,17 +54,25 @@ class WeChat:
     def send_msg(self, data):
         return self._send_msg(data)
 
-    def send_text(self, data):
-        return self._send_msg(data)
+    def upload_media_get_media_id(self, filetype, filepath, filename):
+        """
+        上传临时素材到企微并获取media_id
+        :param filetype: 图片（image）、语音（voice）、视频（video），普通文件（file）
+        :param filepath:
+        :param filename:
+        :return: media_id
+        """
+        try:
+            post_file_url = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token={access_token}&type={filetype}".format(
+                filetype=filetype,
+                access_token=self.access_token)
 
-    def send_markdown(self, data):
-        return self._send_msg(data)
-
-    def send_image(self, data):
-        return self._send_msg(data)
-
-    def send_file(self, data):
-        return self._send_msg(data)
-
-    def send_textcard(self, data):
-        return self._send_msg(data)
+            m = MultipartEncoder(
+                fields={filename: ('file', open(filepath + filename, 'rb'), 'text/plain')},
+            )
+            response = requests.post(url=post_file_url, data=m, headers={'Content-Type': m.content_type})
+            if response.status_code == 200:
+                result = json.loads(response.text)
+                return result['media_id']
+        except Exception as err:
+            raise Exception("upload media error", err)
