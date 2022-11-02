@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name="yourtools",
-    version="0.1.7",
+    version="0.2.1",
     author="zfang",
     author_email="founder517518@163.com",
     description="Python helper tools",
@@ -15,11 +15,12 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://pypi.org/project/yourtools/",
     packages=setuptools.find_packages(),
+    data_files=["requirements.txt"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.6',
     install_requires=required,
 )
