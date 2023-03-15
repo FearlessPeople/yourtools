@@ -19,3 +19,11 @@ class DBConfig:
             setattr(self, k, v)
         if not hasattr(self, 'charset'):
             self.charset = 'utf8'
+
+
+class Tunnel:
+    def __init__(self, dictionary):
+        for k, v in dictionary.items():
+            setattr(self, k, v)
+        if not hasattr(self, 'charset'):
+            self.charset = 'utf8'

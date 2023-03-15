@@ -12,16 +12,21 @@
 -------------------------------------------------
 """
 import pymysql
+from sshtunnel import SSHTunnelForwarder
 from .dbutils import DBConfig
 
 
 class MySQL:
-    def __init__(self, db_config):
-        self._init(db_config)
+    def __init__(self, db_config, ssh_tunnel=None):
+        self.dbconfig = DBConfig(db_config)
+        if ssh_tunnel:
+            ssh_tunnel.start()
+            self.dbconfig.host = ssh_tunnel.local_bind_host
+            self.dbconfig.port = ssh_tunnel.local_bind_port
+        self._init()
 
-    def _init(self, db_config):
+    def _init(self):
         try:
-            self.dbconfig = DBConfig(db_config)
             self._connect = pymysql.connect(
                 host=str(self.dbconfig.host),
                 port=self.dbconfig.port,
@@ -61,6 +66,7 @@ class MySQL:
             cur.execute(sql, param)
             rows = cur.fetchall()
         except Exception as e:
+            raise Exception(e)
             self._connect.rollback()
         cur.close()
         return rows
