@@ -34,7 +34,18 @@ def test_mysql():
         'db': 'test',
         'charset': 'utf8'
     }
+    server = SSHTunnelForwarder(
+        ('10.202.1.6', 45535),
+        ssh_username='root',
+        ssh_password='123456',
+        remote_bind_address=('10.201.2.113', 3366),
+        local_bind_address=('127.0.0.1', 3366)
+    )
+    # 不使用跳板机
     mysql = MySQL(dbconfg)
+    # 使用跳板机，需要传递一个SSHTunnelForwarder对象
+    mysql = MySQL(dbconfg,ssh_tunnel=server)
+    
     # query data
     result = mysql.query("select * from users")
     print(result)
