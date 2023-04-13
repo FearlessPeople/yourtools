@@ -14,8 +14,9 @@
 from time import strftime, localtime
 
 
-def curr_time(time_format=None):
-    if time_format:
-        return strftime(time_format, localtime())
-    else:
-        return strftime("%Y-%m-%d %H:%M:%S", localtime())
+class Time:
+    def curr_time(time_format=None):
+        if time_format:
+            return strftime(time_format, localtime())
+        else:
+            return strftime("%Y-%m-%d %H:%M:%S", localtime())
