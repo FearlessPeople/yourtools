@@ -42,11 +42,11 @@ class MySQL:
             return False
 
     def get_conn(self):
-        if self.connect():
-            return self.connect()
+        if self.connect:
+            return self.connect
         else:
             self._init()
-            return self.connect()
+            return self.connect
 
     def close_conn(self):
         if self.connect:
