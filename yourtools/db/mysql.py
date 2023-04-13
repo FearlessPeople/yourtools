@@ -27,7 +27,7 @@ class MySQL:
 
     def _init(self):
         try:
-            self._connect = pymysql.connect(
+            self.connect = pymysql.connect(
                 host=str(self.dbconfig.host),
                 port=self.dbconfig.port,
                 user=str(self.dbconfig.username),
@@ -35,22 +35,22 @@ class MySQL:
                 db=str(self.dbconfig.db),
                 charset=str(self.dbconfig.charset)
             )
-            self.cursor = self._connect.cursor()
+            self.cursor = self.connect.cursor()
             return True
         except Exception as err:
             raise Exception("MySQL Connection error", err)
             return False
 
     def get_conn(self):
-        if self._connect():
-            return self._connect()
+        if self.connect():
+            return self.connect()
         else:
             self._init()
-            return self._connect()
+            return self.connect()
 
     def close_conn(self):
-        if self._connect:
-            self._connect.close()
+        if self.connect:
+            self.connect.close()
 
     def query(self, sql, param=None):
         """
@@ -60,14 +60,14 @@ class MySQL:
         :param size: Number of rows of data you want to return
         :return:
         """
-        cur = self._connect.cursor(cursor=pymysql.cursors.DictCursor)
+        cur = self.connect.cursor(cursor=pymysql.cursors.DictCursor)
         rows = None
         try:
             cur.execute(sql, param)
             rows = cur.fetchall()
         except Exception as e:
             raise Exception(e)
-            self._connect.rollback()
+            self.connect.rollback()
         cur.close()
         return rows
 
@@ -80,6 +80,6 @@ class MySQL:
         """
         try:
             self.cursor.execute(sql)
-            self._connect.commit()
+            self.connect.commit()
         except Exception as e:
-            self._connect.rollback()
+            self.connect.rollback()
