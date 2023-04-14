@@ -15,5 +15,5 @@
 from .db import *
 from .db.mysql import MySQL
 from .db.hive import Hive
-from .WeChat import WeChat
+from .WeChat import WeChat,Chat
 from .Time import Time

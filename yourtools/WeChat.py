@@ -12,27 +12,70 @@
 -------------------------------------------------
 """
 import json
+import os
 import requests
 from requests_toolbelt import MultipartEncoder
 
 
-def send_chat_msg(key, data):
-    """
-    发送机器人消息到企微群
-    :param key: 机器人地址key
-    :return:
-    """
-    try:
-        url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={key}"
-        header = {
-            "Content-Type": "application/json"
+class Chat:
+    def __init__(self, key):
+        self.key = key
+
+    def upload_media(self, filepath):
+        """
+        发送机器人消息到企微群
+        :param key: 机器人地址key
+        :return:
+        """
+        try:
+            headers = {
+                'Content-Type': 'multipart/form-data',
+            }
+            with open(filepath, 'rb') as f:
+                files = {
+                    'media': (os.path.basename(filepath), f.read())
+                }
+                response = requests.post(
+                    f'https://qyapi.weixin.qq.com/cgi-bin/webhook/upload_media?key={self.key}&type=file',
+                    headers=headers, files=files)
+                if response.status_code == 200:
+                    result = json.loads(response.text)
+                    return result['media_id']
+                else:
+                    print("HTTP Error:", response.status_code)
+                    return None
+        except Exception as err:
+            raise Exception("upload_media error", err)
+
+    def send_file(self, media_id):
+        data = {
+            "msgtype": "file",
+            "file": {
+                "media_id": media_id
+            }
         }
-        response = requests.post(url, headers=header, data=json.dumps(data))
-        if response.status_code == 200:
-            result = json.loads(response.text)
-            return result
-    except Exception as err:
-        raise Exception("Send Chat Message error", err)
+        return self.send_msg(data)
+
+    def send_msg(self, data):
+        """
+        发送机器人消息到企微群
+        :param key: 机器人地址key
+        :return:
+        """
+        try:
+            header = {
+                "Content-Type": "application/json"
+            }
+            response = requests.post(f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={self.key}", headers=header,
+                                     data=json.dumps(data))
+            if response.status_code == 200:
+                result = json.loads(response.text)
+                return result
+            else:
+                print("HTTP Error:", response.status_code)
+                return None
+        except Exception as err:
+            raise Exception("Send Chat Message error", err)
 
 
 class WeChat:
@@ -51,6 +94,9 @@ class WeChat:
                 if response.status_code == 200:
                     result = json.loads(response.text)
                     return result['access_token']
+                else:
+                    print("HTTP Error:", response.status_code)
+                    return None
         except Exception as err:
             raise Exception("get WeChat access Token error", err)
 
@@ -63,6 +109,9 @@ class WeChat:
             if response.status_code == 200:
                 result = json.loads(response.text)
                 return result
+            else:
+                print("HTTP Error:", response.status_code)
+                return None
         except Exception as err:
             raise Exception("send WeChat Message error", err)
 
