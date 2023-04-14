@@ -63,6 +63,7 @@ class WeChat:
         :return: media_id
         """
         try:
+            self._check_token()
             post_file_url = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token={access_token}&type={filetype}".format(
                 filetype=filetype,
                 access_token=self.access_token)
@@ -74,5 +75,36 @@ class WeChat:
             if response.status_code == 200:
                 result = json.loads(response.text)
                 return result['media_id']
+            else:
+                print("HTTP Error:", response.status_code)
+                return None
         except Exception as err:
             raise Exception("upload media error", err)
+
+    def get_media(self, media_id):
+        """
+        获取临时素材
+        :param media_id:
+        :return: 返回二进制形式
+        """
+        try:
+            self._check_token()
+            url = "https://qyapi.weixin.qq.com/cgi-bin/media/get"
+            params = {
+                "access_token": self.access_token,
+                "media_id": media_id
+            }
+            response = requests.get(url=url, params=params)
+            if response.status_code == 200:
+                content_type = response.headers.get('Content-Type')
+                if content_type == 'application/json':
+                    response_data = json.loads(response.text)
+                    print("Error:", response_data.get("errmsg"))
+                    return None
+                else:
+                    return response.content
+            else:
+                print("HTTP Error:", response.status_code)
+                return None
+        except Exception as err:
+            raise Exception("get media error", err)
