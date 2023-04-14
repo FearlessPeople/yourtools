@@ -23,3 +23,6 @@ class Time:
             return strftime(time_format, localtime())
         else:
             return strftime(self.time_format, localtime())
+
+    def curr_time_by_number(self):
+        self.curr_time("%Y%m%d%H%M%S")
