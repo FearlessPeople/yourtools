@@ -16,6 +16,25 @@ import requests
 from requests_toolbelt import MultipartEncoder
 
 
+def send_chat_msg(key, data):
+    """
+    发送机器人消息到企微群
+    :param key: 机器人地址key
+    :return:
+    """
+    try:
+        url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={key}"
+        header = {
+            "Content-Type": "application/json"
+        }
+        response = requests.post(url, headers=header, data=json.dumps(data))
+        if response.status_code == 200:
+            result = json.loads(response.text)
+            return result
+    except Exception as err:
+        raise Exception("Send Chat Message error", err)
+
+
 class WeChat:
     def __init__(self, corpid, corpsecret, agentid):
         self.corpid = corpid
