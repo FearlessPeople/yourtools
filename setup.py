@@ -74,13 +74,12 @@ def write_now_version():
 def main():
     try:
         upload()
+        print("Upload success , Current VERSION:", curr_version())
     except Exception as e:
         raise Exception("Upload package error", e)
 
     # 将新的版本号字符串回写入文件中
     # write_now_version()
-
-    print("Upload success , Current VERSION:", curr_version())
 
 
 if __name__ == '__main__':
