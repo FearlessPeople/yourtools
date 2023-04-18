@@ -12,6 +12,7 @@
 -------------------------------------------------
 """
 from time import strftime, localtime
+from datetime import datetime, timedelta
 
 
 class Time:
@@ -25,4 +26,14 @@ class Time:
             return strftime(self.time_format, localtime())
 
     def curr_time_by_number(self):
-        self.curr_time("%Y%m%d%H%M%S")
+        return self.curr_time("%Y%m%d%H%M%S")
+
+    def _today(self):
+        return datetime.today()
+
+    def today(self):
+        return self._today().strftime("%Y-%m-%d")
+
+    def yesterday(self):
+        yesterday = self._today() - timedelta(days=1)
+        return yesterday.strftime('%Y-%m-%d')
