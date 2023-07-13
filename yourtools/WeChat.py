@@ -13,19 +13,22 @@
 """
 import json
 import os
+import hashlib
+import base64
 import requests
 from requests_toolbelt import MultipartEncoder
 
 
-class Chat:
+# 通过企微群机器人发送消息
+class ChatBot:
     def __init__(self, key):
         self.key = key
 
     def upload_media(self, filepath):
         """
-        发送机器人消息到企微群
-        :param key: 机器人地址key
-        :return:
+        上传临时素材，给企微群里发文件消息时需要先将文件上传至企微临时素材中
+        :param filepath:
+        :return: 临时素材的media_id
         """
         try:
             headers = {
@@ -47,7 +50,13 @@ class Chat:
         except Exception as err:
             raise Exception("upload_media error", err)
 
-    def send_file(self, media_id):
+    def send_file(self, file_path):
+        """
+        发送文件到群里
+        :param file_path:
+        :return:
+        """
+        media_id = self.upload_media(file_path)
         data = {
             "msgtype": "file",
             "file": {
@@ -56,10 +65,85 @@ class Chat:
         }
         return self.send_msg(data)
 
+    def send_text(self, content, mentioned_list=None, mentioned_mobile_list=None):
+        """
+        发送文本消息
+        :param content:
+        :param mentioned_list: 需要@的人userid
+        :param mentioned_mobile_list: 需要@的人手机号
+        :return:
+        """
+        data = {
+            "msgtype": "text",
+            "text": {
+                "content": content
+            }
+        }
+        if mentioned_list is not None and mentioned_list:
+            data['text'].update({"mentioned_list": mentioned_list})
+        if mentioned_mobile_list is not None and mentioned_mobile_list:
+            data['text'].update({"mentioned_mobile_list": mentioned_mobile_list})
+
+        self.send_msg(data)
+
+    def send_markdown(self, content):
+        """
+        发送Markdown消息
+        :param content:
+        :return:
+        """
+        data = {
+            "msgtype": "markdown",
+            "markdown": {
+                "content": content
+            }
+        }
+        self.send_msg(data)
+
+    def send_img(self, img_path):
+        """
+        发送图片消息
+        图片（base64编码前）最大不能超过2M，支持JPG,PNG格式
+        :param img_path:
+        :return:
+        """
+        data = {
+            "msgtype": "image",
+            "image": {
+                "base64": self.img_to_base64(img_path),
+                "md5": self.img_to_md5(img_path)
+            }
+        }
+        self.send_msg(data)
+
+    def send_news(self, title, description, url, picurl):
+        """
+        发送图文消息
+        :param title: 标题
+        :param description: 描述
+        :param url: 跳转URL
+        :param picurl: 图文图片地址
+        :return:
+        """
+        data = {
+            "msgtype": "news",
+            "news": {
+                "articles": [
+                    {
+                        "title": title,
+                        "description": description,
+                        "url": url,
+                        "picurl": picurl
+                    }
+                ]
+            }
+        }
+        self.send_msg(data)
+
     def send_msg(self, data):
         """
-        发送机器人消息到企微群
-        :param key: 机器人地址key
+        发送机器人通用消息到企微群
+        :param data: 消息内容json数据
         :return:
         """
         try:
@@ -77,8 +161,21 @@ class Chat:
         except Exception as err:
             raise Exception("Send Chat Message error", err)
 
+    def img_to_md5(self, img_path):
+        # 读取图片文件并计算MD5值
+        with open(img_path, 'rb') as image_file:
+            image_data = image_file.read()
+            return hashlib.md5(image_data).hexdigest()
 
-class WeChat:
+    def img_to_base64(self, img_path):
+        # 读取图片文件并转换为Base64编码
+        with open(img_path, 'rb') as image_file:
+            image_data = image_file.read()
+            return base64.b64encode(image_data).decode('utf-8')
+
+
+# 通过企微应用发送消息
+class AppBot:
     def __init__(self, corpid, corpsecret, agentid):
         self.corpid = corpid
         self.corpsecret = corpsecret
