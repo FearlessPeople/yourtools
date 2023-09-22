@@ -118,7 +118,7 @@ class Azkaban:
 
 
 if __name__ == '__main__':
-    azkaban = Azkaban("azkaban", "azkaban", "http://10.202.1.6:8084")
+    azkaban = Azkaban("azkaban", "azkaban", "http://127.0.0.1:8080")
     print(azkaban.fetch_exec_flow(264))
     print(azkaban.get_running(project="test", flow="datawarehouse_end"))
     print(azkaban.fetch_project_flows("datawarehouse"))
