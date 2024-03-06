@@ -6,6 +6,17 @@ pip3 uninstall yourtools
 pip3 install yourtools
 ```
 
+## 常见错误
+
+### cannot import name 'appengine' from 'urllib3.contrib'
+
+卸载urllib3和requests-toolbelt，安装以下版本
+```python
+pip install urllib3==1.26.15
+pip install requests-toolbelt==0.10.1
+```
+
+
 ## Table of Contents
 
 - WeChat
